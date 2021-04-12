@@ -36,12 +36,13 @@ async def main(client, message):
         except FloodWait as e:
             await asyncio.sleep(e.x)
         return
-
+    test = message.text
+    if "first" in test:
+        await message.reply_text("1st", quote=True)
     if message.text == "!start" and (message.from_user.id == int(Config.USER_ID)):
         await message.edit(text="Hi, Myself!\nThis is a Forwarder Userbot by @AbirHasan2005", parse_mode="Markdown", disable_web_page_preview=True)
-    elif message.text == "!help" and (message.from_user.id == int(Config.USER_ID)):
-        await message.edit(
-            text="This UserBot can forward messages from any Chat to any other Chat also you can kang all messages from one Chat to another Chat.\n\n👨🏻‍💻 **Commands:**\n• `!start`\n• `!help`\n• `!kang`\n\n©️ **Developer:** @AbirHasan2005\n👥 **Support Group:** [【★ʟя★】](https://t.me/linux_repo)",
+    elif message.text == "!help" and (message.from_user.id == int(Config.USER_ID)):    
+        await message.edit(text="This UserBot can forward messages from any Chat to any other Chat also you can kang all messages from one Chat to another Chat.\n\n👨🏻‍💻 **Commands:**\n• `!start`\n• `!help`\n• `!kang`\n\n©️ **Developer:** @AbirHasan2005\n👥 **Support Group:** [【★ʟя★】](https://t.me/linux_repo)",
             parse_mode="Markdown", disable_web_page_preview=True)
     elif message.text == "!kang" and (message.from_user.id == int(Config.USER_ID)):
         editable = await message.edit(
