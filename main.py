@@ -2,6 +2,7 @@
 # This is Telegram Messages Forwarder UserBot!
 # Use this at your own risk. I will not be responsible for any kind of issue while using this!
 
+import time
 import asyncio
 from pyrogram import Client, filters
 from pyrogram.errors import FloodWait, UserDeactivatedBan
@@ -10,9 +11,10 @@ from configs import Config
 User = Client(session_name=Config.STRING_SESSION, api_hash=Config.API_HASH, api_id=Config.API_ID)
 
 
-async kanger(msg):
+async def kanger(msg):
     await msg.edit(text="Forwarding Now ...")
     async for message in User.iter_history(chat_id=int(Config.FORWARD_FROM_CHAT_ID), reverse=True):
+        await asyncio.sleep(Config.SLEEP_TIME)
         try:
             await message.copy(int(Config.FORWARD_TO_CHAT_ID))
         except FloodWait as e:
@@ -38,12 +40,26 @@ async def main(client, message):
         return
 
     if message.text == "!start" and (message.from_user.id == int(Config.USER_ID)):
-        await message.edit(text="Hi, Myself!\nThis is a Forwarder Userbot by @AbirHasan2005", parse_mode="Markdown", disable_web_page_preview=True)
+        await message.edit(text="Hi, Myself!\nThis is a Forwarder Userbot by @AbirHasan2005", parse_mode="Markdown",
+                           disable_web_page_preview=True)
     elif message.text == "!help" and (message.from_user.id == int(Config.USER_ID)):
         await message.edit(
             text="This UserBot can forward messages from any Chat to any other Chat also you can kang all messages from one Chat to another Chat.\n\n👨🏻‍💻 **Commands:**\n• `!start`\n• `!help`\n• `!kang`\n\n©️ **Developer:** @AbirHasan2005\n👥 **Support Group:** [【★ʟя★】](https://t.me/linux_repo)",
             parse_mode="Markdown", disable_web_page_preview=True)
-    elif message.text == "!kang" and (message.from_user.id == int(Config.USER_ID)):
+    elif message.text == "!restart" and (message.from_user.id == int(Config.USER_ID)):
+        if Config.HEROKU_APP is None:
+            await message.edit(
+                text="First Set `HEROKU_API_KEY` & `HEROKU_APP_NAME` to Restart Heroku Dynos!",
+                parse_mode="Markdown",
+                disable_web_page_preview=True
+            )
+        else:
+            await message.edit(
+                text="Restarting Heroku Dyno ..."
+            )
+            Config.HEROKU_APP.restart()
+            time.sleep(30)
+    elif message.text.startswith("!kang") and (message.from_user.id == int(Config.USER_ID)):
         editable = await message.edit(
             text=f"Trying to Get All Messages from `{str(Config.FORWARD_FROM_CHAT_ID)}` and Forwarding to `{str(Config.FORWARD_TO_CHAT_ID)}` ...",
             parse_mode="Markdown", disable_web_page_preview=True)
