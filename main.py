@@ -11,22 +11,6 @@ from configs import Config
 User = Client(session_name=Config.STRING_SESSION, api_hash=Config.API_HASH, api_id=Config.API_ID)
 
 
-async def kanger(msg):
-    await msg.edit(text="Forwarding Now ...")
-    async for message in User.iter_history(chat_id=int(Config.FORWARD_FROM_CHAT_ID), reverse=True):
-        await asyncio.sleep(Config.SLEEP_TIME)
-        try:
-            await message.copy(int(Config.FORWARD_TO_CHAT_ID))
-        except FloodWait as e:
-            await User.send_message(chat_id="me", text=f"#FloodWait: Stopping Forwarder for `{e.x}s`!")
-            await asyncio.sleep(e.x)
-        except UserDeactivatedBan:
-            print("Congratulations!\nYour Account Banned Successfully!\nI already told you use a Fake Account. Hope you remember.")
-            break
-        except Exception as err:
-            await User.send_message(chat_id="me", text=f"#ERROR: `{err}`")
-    await msg.edit(text="Channel Files Successfully Kanged!\n\n©️ A Forwarder Userbot by @AbirHasan2005")
-
 
 @User.on_message((filters.text | filters.media) & ~filters.edited)
 async def main(client, message):
@@ -59,12 +43,7 @@ async def main(client, message):
             )
             Config.HEROKU_APP.restart()
             time.sleep(30)
-    elif message.text.startswith("!kang") and (message.from_user.id == int(Config.USER_ID)):
-        editable = await message.edit(
-            text=f"Trying to Get All Messages from `{str(Config.FORWARD_FROM_CHAT_ID)}` and Forwarding to `{str(Config.FORWARD_TO_CHAT_ID)}` ...",
-            parse_mode="Markdown", disable_web_page_preview=True)
-        await asyncio.sleep(5)
-        await kanger(editable)
+
     elif message.chat.id == (int(Config.FORWARD_FROM_CHAT_ID)):
         try:
             await message.forward(int(Config.FORWARD_TO_CHAT_ID))
