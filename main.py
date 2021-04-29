@@ -16,7 +16,10 @@ async def kanger(msg):
     async for message in User.iter_history(chat_id=int(Config.FORWARD_FROM_CHAT_ID), reverse=True):
         await asyncio.sleep(Config.SLEEP_TIME)
         try:
-            await message.copy(int(Config.FORWARD_TO_CHAT_ID))
+            if Config.FORWARD_AS_COPY is True:
+                await message.copy(int(Config.FORWARD_TO_CHAT_ID))
+            elif Config.FORWARD_AS_COPY is False:
+                await message.forward(int(Config.FORWARD_TO_CHAT_ID))
         except FloodWait as e:
             await User.send_message(chat_id="me", text=f"#FloodWait: Stopping Forwarder for `{e.x}s`!")
             await asyncio.sleep(e.x)
@@ -67,7 +70,10 @@ async def main(client, message):
         await kanger(editable)
     elif message.chat.id == (int(Config.FORWARD_FROM_CHAT_ID)):
         try:
-            await message.forward(int(Config.FORWARD_TO_CHAT_ID))
+            if Config.FORWARD_AS_COPY is False:
+                await message.forward(int(Config.FORWARD_TO_CHAT_ID))
+            elif Config.FORWARD_AS_COPY is True:
+                await message.copy(int(Config.FORWARD_TO_CHAT_ID))
         except FloodWait as e:
             await client.send_message(chat_id="me", text=f"#FloodWait: Stopping Forwarder for `{e.x}s`!")
             await asyncio.sleep(e.x)

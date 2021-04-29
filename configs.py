@@ -16,6 +16,8 @@ class Config(object):
     FORWARD_TO_CHAT_ID = os.environ.get("FORWARD_TO_CHAT_ID", None)
     # Your User ID
     USER_ID = os.environ.get("USER_ID", None)
+    # Forward Mode
+    FORWARD_AS_COPY = bool(os.environ.get("FORWARD_AS_COPY", False))
     # Sleep Time while Kang
     SLEEP_TIME = int(os.environ.get("SLEEP_TIME", 10))
     # Heroku Management
